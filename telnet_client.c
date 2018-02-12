@@ -2,14 +2,15 @@
 #include <stdlib.h>
 #include <sys/types.h>
 #include <sys/socket.h>
-#include <strings.h>
+#include <string.h>
 #include <unistd.h>
  #include <netinet/in.h>
      #include <arpa/inet.h>
 
 int main(int argc, char **argv) 
 {
-	int  sockfd, n, input; 
+	int  sockfd, n;
+	char *input;
 	char recvline[100];
 	struct sockaddr_in servaddr;
 
@@ -51,7 +52,11 @@ int main(int argc, char **argv)
 		while ( 1 )
 		{
 			printf("\ntelnet> ");
-			scanf("%d", &n);
+			scanf("%s", &input);
+			if ( strcmp(&input, "exit") == 0 )
+				exit(0);
+			else
+				printf("\nYou printed: %s", &input);
 		}
 	}               
         
