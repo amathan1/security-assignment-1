@@ -29,7 +29,7 @@ generate_map(int seed)
 		seed /= 10;
 		subs.push_back(cur_num);
 		inv_map[cur_num-*fst] = *fst + subs_cnt;
-		alph.erase(current);
+		alph.erase(alph.begin() + current);
 		subs_cnt++;
 	}
 
