@@ -11,7 +11,7 @@
 
 int main(int argc, char **argv)
 {
-	int   listenfd, connfd, clilen, n;
+	int   listenfd, connfd, clilen, n, bytes_written, bytes_read;
 	struct sockaddr_in servaddr, cliaddr;
 	char buff[100], data_received[100], sent_data[100];
 	time_t ticks;
@@ -39,7 +39,9 @@ int main(int argc, char **argv)
 		do
 		{
 			//Receive from client section
-			n = read(connfd, data_received, 100);
+			bytes_read = read(connfd, data_received, 100);
+			if ( bytes_read == -1 )
+				perror("\nError reading data");
 			data_received[n] = '\0';
 			printf("%s\n", data_received);
 			/*if ( (strncmp(data_received, "ls", 2)) == 0 )
@@ -48,9 +50,13 @@ int main(int argc, char **argv)
 			}*/
 
 			//Reply to client section
+			strcpy(sent_data, "DKHD");
+			bytes_written = write(connfd, sent_data, 100);
+			if ( bytes_written == -1 )
+				perror("\nError sending data");
 
 		}
-		while ( n != 0 );
+		while ( bytes_read != 0 );
 		
 		/* Close the connection */
 		close(connfd);

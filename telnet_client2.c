@@ -13,7 +13,7 @@
 int main(int argc, char **argv)
 {
 	int  sockfd, n, bytes_written, bytes_read;
-	char recvline[100], sent_data[100];
+	char recvline[100], sent_data[100], received_data[100];
 	struct sockaddr_in servaddr;
 
 	if ( argc != 2 )
@@ -63,6 +63,11 @@ int main(int argc, char **argv)
 		}
 
 		//Receive from server section
+		bytes_read = read(sockfd, received_data, 100);
+		if ( bytes_read == -1 )
+			perror("\nError reading data");
+
+		printf("\nMessage from server: %s", received_data);
 	}
 	while ( 1 );
 
