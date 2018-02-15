@@ -42,15 +42,20 @@ int main(int argc, char **argv)
 			bytes_read = read(connfd, data_received, 100);
 			if ( bytes_read == -1 )
 				perror("\nError reading data");
-			data_received[n] = '\0';
+			data_received[bytes_read] = '\0';
 			printf("%s\n", data_received);
-			/*if ( (strncmp(data_received, "ls", 2)) == 0 )
+			
+			if ( (strncmp(data_received, "ls", 2)) == 0 )
 			{
-				printf("\nYOU SUCK");
-			}*/
-
+				//fprintf(stdout, "\nYOU SUCK");
+				strcpy(sent_data, "DKHD");
+			}
+			else
+			{
+				strcpy(sent_data, "");
+			}
 			//Reply to client section
-			strcpy(sent_data, "DKHD");
+			//strcpy(sent_data, "DKHD LOL");
 			bytes_written = write(connfd, sent_data, 100);
 			if ( bytes_written == -1 )
 				perror("\nError sending data");
