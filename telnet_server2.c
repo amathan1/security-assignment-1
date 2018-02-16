@@ -1,5 +1,5 @@
 #include <stdio.h>
-
+#include <errno.h>
 #include <stdlib.h>
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -8,13 +8,17 @@
 #include <netinet/in.h>
 #include <netinet/ip.h>
 #include <time.h>
+#include <sys/stat.h>
+#include <sys/types.h>
 
 int main(int argc, char **argv)
 {
-	int   listenfd, connfd, clilen, n, bytes_written, bytes_read;
+	int   listenfd, connfd, clilen, n, bytes_written, bytes_read, ret_val;
 	struct sockaddr_in servaddr, cliaddr;
-	char buff[100], data_received[100], sent_data[100];
+	char buff[100], data_received[100], sent_data[1000];
+	char *last_token, *token;
 	time_t ticks;
+	FILE *in = NULL;
 
 	/* Create a TCP socket */
 	listenfd = socket(AF_INET, SOCK_STREAM, 0);
@@ -39,24 +43,74 @@ int main(int argc, char **argv)
 		do
 		{
 			//Receive from client section
-			bytes_read = read(connfd, data_received, 100);
+			bytes_read = read(connfd, data_received, 1000);
 			if ( bytes_read == -1 )
 				perror("\nError reading data");
 			data_received[bytes_read] = '\0';
-			printf("%s\n", data_received);
+			//printf("%s\n", data_received);
 			
-			if ( (strncmp(data_received, "ls", 2)) == 0 )
+			if ( (strncmp(data_received, "ls", 2)) == 0 )				//If ls command is received from client
 			{
-				//fprintf(stdout, "\nYOU SUCK");
-				strcpy(sent_data, "DKHD");
+				in = popen("ls | xargs", "r");
+				fgets(sent_data, 1000, in);
+			}
+			else if ( (strncmp(data_received, "pwd", 3)) == 0 )			//If pwd command is received from client
+			{
+				in = popen(data_received, "r");
+				fgets(sent_data, 1000, in);
+			}
+			else if ( (strncmp(data_received, "cd", 2)) == 0 )			//If cd command is received from client
+			{
+				last_token = NULL;
+				token = strtok(data_received, " \t\n");
+				while ( token )
+				{
+					last_token = token;
+					token = strtok(NULL, " \t\n");
+				}
+				ret_val = chdir(last_token);
+				if ( ret_val == -1 )
+					strcpy(sent_data, "Error changing directory");
+				else
+					strcpy(sent_data, "");
+			}
+			else if ( (strncmp(data_received, "rmdir", 5)) == 0 )			//If rmdir command is received from client
+			{
+				last_token = NULL;
+				token = strtok(data_received, " \t\n");
+				while ( token )
+				{
+					last_token = token;
+					token = strtok(NULL, " \t\n");
+				}
+				ret_val = rmdir(last_token);
+				if ( ret_val == -1 )
+					strcpy(sent_data, "Error removing directory");
+				else
+					strcpy(sent_data, "");
+			}
+			else if ( (strncmp(data_received, "mkdir", 5)) == 0 )			//If mkdir command is received from client
+			{
+				last_token = NULL;
+				token = strtok(data_received, " \t\n");
+				while ( token )
+				{
+					last_token = token;
+					token = strtok(NULL, " \t\n");
+				}
+				ret_val = mkdir(last_token, ACCESSPERMS);
+				if ( ret_val == -1 )
+					strcpy(sent_data, "Error making directory");
+				else
+					strcpy(sent_data, "");
 			}
 			else
 			{
 				strcpy(sent_data, "");
 			}
+			system("pwd");
 			//Reply to client section
-			//strcpy(sent_data, "DKHD LOL");
-			bytes_written = write(connfd, sent_data, 100);
+			bytes_written = write(connfd, sent_data, 1000);
 			if ( bytes_written == -1 )
 				perror("\nError sending data");
 

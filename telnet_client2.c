@@ -13,7 +13,7 @@
 int main(int argc, char **argv)
 {
 	int  sockfd, n, bytes_written, bytes_read;
-	char recvline[100], sent_data[100], received_data[100];
+	char recvline[100], sent_data[100], received_data[1000];
 	struct sockaddr_in servaddr;
 
 	if ( argc != 2 )
@@ -48,10 +48,10 @@ int main(int argc, char **argv)
 	do
 	{
 		printf("\ntelnet> ");
-		scanf("%s", sent_data);
-		
+		fgets(sent_data, 100, stdin);					//Get input from keyboard including whitespace
+
 		//Send to server section
-		if ( strcmp(sent_data, "exit") == 0 )
+		if ( strncmp(sent_data, "exit", 4) == 0 )			
 		{
 			exit(0);
 		}
@@ -63,11 +63,11 @@ int main(int argc, char **argv)
 		}
 
 		//Receive from server section
-		bytes_read = read(sockfd, received_data, 100);
+		bytes_read = read(sockfd, received_data, 1000);
 		if ( bytes_read == -1 )
 			perror("\nError reading data");
 
-		printf("\nMessage from server: %s", received_data);
+		printf("%s", received_data);
 	}
 	while ( 1 );
 
