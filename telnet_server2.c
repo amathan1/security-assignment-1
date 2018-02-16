@@ -4,6 +4,7 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <string.h>
+#include <strings.h>
 #include <unistd.h>
 #include <netinet/in.h>
 #include <netinet/ip.h>
@@ -104,7 +105,7 @@ int main(int argc, char **argv)
 					last_token = token;
 					token = strtok(NULL, " \t\n");
 				}
-				ret_val = mkdir(last_token, ACCESSPERMS);
+				ret_val = mkdir(last_token, S_IRWXU | S_IRWXG | S_IRWXO);
 				if ( ret_val == -1 )
 					strcpy(sent_data, "Error making directory");
 				else
