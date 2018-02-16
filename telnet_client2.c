@@ -9,17 +9,37 @@
 #include <netinet/ip.h>
 #include <time.h>
 #include<unistd.h>
+#include <netdb.h>
 
 int main(int argc, char **argv)
 {
-	int  sockfd, n, bytes_written, bytes_read;
-	char recvline[100], sent_data[100], received_data[1000];
+	int  sockfd, n, bytes_written, bytes_read, i;
+	int port = atoi(argv[2]);
+	char recvline[100], sent_data[100], received_data[1000], ip[100];
 	struct sockaddr_in servaddr;
+	char *hostname, *ip_address;
+	struct hostent *he;
+	struct in_addr **addr_list;
 
-	if ( argc != 2 )
+	if ( argc != 3 )					//If client isn't invoked using the correct sequence of commands
 	{
-		printf("Usage : gettime <IP address>");
+		printf("Usage : ./telnetcli <server hostname> <port number>");
 		exit(1);
+	}
+
+	hostname = argv[1];
+	if ( (he = gethostbyname(hostname)) == NULL )				//If no hostname is obtained
+	{
+		// get the host info
+		herror("gethostbyname");
+		return 1;
+	}
+
+	addr_list = (struct in_addr **) he->h_addr_list;
+
+	for ( i = 0; addr_list[i] != NULL; i++ )
+	{
+		strcpy(ip, inet_ntoa(*addr_list[i]));
 	}
 
 	/* Create a TCP socket */
@@ -28,12 +48,13 @@ int main(int argc, char **argv)
 		perror("socket"); exit(2);
 	}
 
+	//printf("\n%s", argv[2]);
 	/* Specify server’s IP address and port */
 	bzero(&servaddr, sizeof(servaddr));
 	servaddr.sin_family = AF_INET;
-	servaddr.sin_port = htons(10000); /* daytime server port */
+	servaddr.sin_port = htons(port); /* daytime server port */
 
-	if ( inet_pton(AF_INET, argv[1], &servaddr.sin_addr) <= 0 )
+	if ( inet_pton(AF_INET, ip, &servaddr.sin_addr) <= 0 )
 	{
 		perror("inet_pton"); exit(3);
 	}
