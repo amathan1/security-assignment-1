@@ -77,7 +77,11 @@ int main(int argc, char **argv)
 				}
 				ret_val = chdir(last_token);
 				if ( ret_val == -1 )
+				{
 					strcpy(sent_data, "Error changing directory");
+					if(errno == 2 )
+						strcpy(sent_data, "directory does not exist");
+				}
 				else
 					strcpy(sent_data, "");
 			}
@@ -92,7 +96,10 @@ int main(int argc, char **argv)
 				}
 				ret_val = rmdir(last_token);
 				if ( ret_val == -1 )
-					strcpy(sent_data, "Error removing directory");
+				{
+					if(errno == 2 )
+					strcpy(sent_data, "directory does not exist");
+				}
 				else
 					strcpy(sent_data, "");
 			}
@@ -107,7 +114,10 @@ int main(int argc, char **argv)
 				}
 				ret_val = mkdir(last_token, S_IRWXU | S_IRWXG | S_IRWXO);
 				if ( ret_val == -1 )
-					strcpy(sent_data, "Error making directory");
+				{
+					if(errno == 2 )
+						strcpy(sent_data, "directory does not exist");
+				}
 				else
 					strcpy(sent_data, "");
 			}
