@@ -3,6 +3,7 @@
 #include <cstdlib>	// This has atoi
 #include <string>
 #include <array>
+#include <linux/mman.h>
 #include <vector>
 
 using namespace std;
@@ -19,11 +20,15 @@ int
 generate_map(int seed)
 {
 
+
+	cout << "We're coming inside this function" << endl;
+
 	int current;
 	int cur_num;
 	int subs_cnt = 0;
 	while (seed > 0)
 	{
+		cout << "We're inside the while loop" << endl;
 		current = seed % 10;
 		cur_num = alph[current];
 		seed /= 10;
@@ -33,6 +38,8 @@ generate_map(int seed)
 		subs_cnt++;
 	}
 
+	cout << "alphabets size is: " << alph.size() << endl;
+
 	for(int i = 0; i < alph.size(); i++)
 	{
 		subs.push_back(alph[i]);
@@ -40,7 +47,7 @@ generate_map(int seed)
 		subs_cnt++;
 	}
 
-	alph.clear();
+	//alph.clear();
 
 	return 0;
 }
@@ -59,6 +66,10 @@ encrypt(vector<int> &plainText, vector<int> &cipherText)
 	}
 
 	// Write it to the new file. You have to pass *fd to new file.
+
+
+
+
 	return 0;
 }
 
@@ -74,15 +85,23 @@ main(int argc, char* argv[])
 	*fst = (int)p;
 	*ptr = 0;
 
+	ofstream input;
+	input.open(argv[1]);
+
 	for (int i = 0; i < 26; ++i)
 	{
 		alph.push_back(*fst+i);
 	}
 
-	srand(atoi(argv[1]));
+	srand(atoi(argv[3]));
 	seed = rand();
-
+	cout << "Are we even coming here? " << endl;
 	generate_map(seed);	// This should generate the map and keep it in the subs thing. You know what to do. 
+	
+	for (int i = 0; i < 26; i++) {
+		cout << "\tCipher: " << (char)subs[i] << endl;
+	}
+	cout << "Okay. So, map has been generated" << endl;
 
 
 	return 0;
