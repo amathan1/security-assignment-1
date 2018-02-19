@@ -20,6 +20,10 @@ Language used for Part II: C++
 - The client will connect to the telnet server. You can now execute the commands for this assignment
 
   Steps to execute Part II:
+- Extract the contents of p2-vranade1.tar file. Open the Part II.
+- Enter the command make.
+- ./mono <inputfile> <outputfile> <seed> 1/0  (1 encrypts and 0 decrypts)
+
 
 5. Additional notes:
 - In Part I, while executing the client on bingsuns, if only two command line arguments are entered instead of three, a segmentation fault may occur. This error was not encountered on a Ubuntu system.
