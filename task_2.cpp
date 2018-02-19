@@ -97,7 +97,7 @@ main(int argc, char* argv[])
 
 	srand(atoi(argv[3]));
 	seed = rand();
-	generate_map(seed);	// This should generate the map and keep it in the subs thing. You know what to do. 
+	generate_map(seed);
 
 
 	if (atoi(argv[4]) == 1) {
