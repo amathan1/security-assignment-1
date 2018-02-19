@@ -1,6 +1,6 @@
 #include <iostream>
-#include <fstream>	// For FD
-#include <cstdlib>	// This has atoi
+#include <fstream>
+#include <cstdlib>
 #include <string.h>
 #include <array>
 #include <linux/mman.h>
@@ -15,7 +15,6 @@ vector<int> subs;
 array<int, 26> inv_map;
 vector<int> assigned;
 
-// Send the seed here. Loop through the digits in the seed. Assign the characters to alphabets in order. 
 int 
 generate_map(int seed)
 {
@@ -58,11 +57,6 @@ encrypt(vector<int> &plainText, vector<int> &cipherText)
 		cur_cipher = (int)plainText[i] - *fst;
 		cipherText.push_back(subs[cur_cipher]);
 	}
-
-	// Write it to the new file. You have to pass *fd to new file.
-
-
-
 
 	return 0;
 }
