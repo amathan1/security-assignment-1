@@ -79,8 +79,6 @@ main(int argc, char* argv[])
 	*fst = (int)p;
 	*ptr = 0;
 
-	cout << "The integer value of a is : " << *fst << endl;
-
 	ifstream is(argv[1]);
 	ofstream os(argv[2]);
 
@@ -92,7 +90,6 @@ main(int argc, char* argv[])
 	while(is.get(c))
 	{
 		input_file[cnt] = c;
-		cout << c;
 		cnt++;
 	}
 
@@ -121,13 +118,11 @@ main(int argc, char* argv[])
 
 	os << output_file << endl;
 
-
-	
-	for (int i = 0; i < 26; i++) {
-		cout << "Alphabet: " << char(*fst + i) << "\tCipher: " << (char)subs[i] << "\t" << (char)inv_map[i] << endl;
-	}
+	for (int i = 0; i < 26; i++)
+		cout << char(*fst + i) << "-" << (char)subs[i] << ", ";
 
 	delete fst, ptr;
+	free(output_file);
 
 	return 0;
 }
