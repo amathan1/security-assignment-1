@@ -47,24 +47,6 @@ generate_map(int seed)
 
 
 int 
-encrypt(vector<int> &plainText, vector<int> &cipherText)
-{
-
-	int cur_cipher;
-
-	for(int i = 0; i < plainText.size(); i++)
-	{
-		cur_cipher = (int)plainText[i] - *fst;
-		cipherText.push_back(subs[cur_cipher]);
-	}
-
-	return 0;
-}
-
-
-
-
-int 
 main(int argc, char* argv[])
 {
 
